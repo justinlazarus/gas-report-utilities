@@ -27,7 +27,6 @@ var fusionUtils = (function() {
   /*
    * Returns the column type of a Google Fusion Tables column 
    * based on the string 'columnName' passed
-   *
    */
   TableObject.prototype.getColumnType = function(columnName) {
     return this.columns.find(function(column) {
@@ -38,7 +37,6 @@ var fusionUtils = (function() {
   /*
    * Returns the a Query collection 'rows' object representing
    * all rows in the table
-   *
    */
   TableObject.prototype.getAllRows = function() {
     var query = 'select * from ' + this.tableId;
