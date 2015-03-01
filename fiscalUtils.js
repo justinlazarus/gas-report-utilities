@@ -1,4 +1,4 @@
-var fiscalTools = (function() {
+var fiscalUtils = (function() {
   
   // Constants
   var DAYS_IN_PERIOD = 28;
@@ -131,7 +131,7 @@ var fiscalTools = (function() {
   return {
     FiscalObject: FiscalObject,
     getFiscalProperties: getFiscalProperties,
-    moment: moment
+    magicMoment: moment
   }
 
 } ());
