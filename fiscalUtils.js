@@ -1,3 +1,9 @@
+function test() {
+  var moment = Moment.load();
+  var date = moment('20170918', "YYYYMMDD").getFiscalDate();
+  date = date;
+}
+
 var fiscalUtils = (function() {
   
   // Constants
@@ -26,19 +32,26 @@ var fiscalUtils = (function() {
     return getFiscalProperties(this);
   }
   
+  moment.fn.getFiscalDates = function() {
+    var fiscalProperties = getFiscalProperties(this);
+    var fy = new FiscalObject(fiscalProperties.year);
+    
+    return fy.getDates();
+  }
+  
   function getSeedByFiscalYear(fiscalYear) {
-    return Uscore._find(seeds, function(seed) {
+    return seeds.filter(function(seed) {
       return (seed.year == fiscalYear);
-    });
+    })[0];
   }
   
   function getSeedByDate(date) {
-    return Uscore._find(seeds, function(seed) {
+    return seeds.filter(function(seed) {
       return (
         (date.isSame(moment(seed.start)) || date.isAfter(moment(seed.start))) &&
         (date.isSame(moment(seed.end)) || date.isBefore(moment(seed.end)))
       );
-    }); 
+    })[0]; 
   }
   
   // Returns all of the typical fiscal properties for the date passed in. Expects
@@ -131,7 +144,7 @@ var fiscalUtils = (function() {
   return {
     FiscalObject: FiscalObject,
     getFiscalProperties: getFiscalProperties,
-    magicMoment: moment
+    moment: moment
   }
 
 } ());
