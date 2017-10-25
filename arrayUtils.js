@@ -1,6 +1,25 @@
-var arrayTools = (function() {
+
+var arrayUtils = (function() {
 
   var moment = Moment.load();
+
+  function chunk(chunkSize) {
+    var R = [];
+    for (var i=0; i<this.length; i+=chunkSize) {
+      R.push(this.slice(i,i+chunkSize));
+    }
+    return R;
+  }
+  
+  function chunkArray(myArray, chunk_size){
+    var results = [];
+    
+    while (myArray.length) {
+        results.push(myArray.splice(0, chunk_size));
+    }
+    
+    return results;
+  }
   
   function range(rangeObject) {
     var start = rangeObject.start;
@@ -68,6 +87,8 @@ var arrayTools = (function() {
     filterByDate: filterByDate,
     filterByValues: filterByValues,
     range: range,
+    chunk: chunk,
+    chunkArray: chunkArray,
     dateRange: dateRange
   }
 } ());
