@@ -110,7 +110,7 @@ var fusionUtils = (function() {
     // query request. This ensures that no more than 5 queries are executed 
     // per second. 
     Utilities.sleep(200);
-    return FusionTables.Query.sql(query).rows;
+    return FusionTables.Query.sqlGet(query).rows;
   }
   
   // Returns a query string that will insert a row into a table. 
@@ -124,7 +124,7 @@ var fusionUtils = (function() {
       // Non-numeric type columns
       if (column.type !== table.constants.numericType) {
         valueString += (
-          table.constants.apostrophee + row[column['name']] 
+          table.constants.apostrophee + row[column['name']]
           + table.constants.apostrophee + table.constants.comma
         );
         
@@ -161,7 +161,7 @@ var fusionUtils = (function() {
       // frequency. However, there is a 150 row limit before hitting the 5 minute
       // quota. Therefore, for any insert request with more than a couple rows, 
       // 'insertRows' should be used. 
-      Utilities.sleep(2000);
+      Utilities.sleep(50);
       return FusionTables.Query.sql(insertQuery).rows;
     };
   }
@@ -171,19 +171,24 @@ var fusionUtils = (function() {
   // and rows must be an array of object with keys that correspond to 
   // the column names in the "columns" property of a table object. 
   function insertRows(table, rows) {
-    var insertQuery = "";
     
-    rows.forEach(function(row) {
-      var exists = rowExists(table, row);
-      if (!exists) {
-        insertQuery += getInsertString(table, row) 
+    var chunkedRows = arrayUtils.chunkArray(rows, 25);
+    
+    chunkedRows.forEach(function(rows) {
+      var insertQuery = "";
+      
+      rows.forEach(function(row) {
+        var exists = rowExists(table, row);
+        if (!exists) {
+          insertQuery += getInsertString(table, row) 
           + table.constants.semiColon + table.constants.space;
-      };
-    });
+        };
+      });
     
-    if (insertQuery.length > 0) {
-      return FusionTables.Query.sql(insertQuery).rows;
-    };
+      if (insertQuery.length > 0) {
+        FusionTables.Query.sql(insertQuery);
+      };
+    });  
   }  
   
   // Public Exports
